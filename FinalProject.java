@@ -2,20 +2,55 @@ import java.util.*;
 public class FinalProject {
 
 static Scanner input = new Scanner(System.in);
-static int[] ids = {753489, 992931, 758737, 333943, 841524, 395337};
-static String [] usernames = {"ahmed012", "amr_78", "joe818", "aly72", "hesham98","abdo88" };
-static String [] Emails = {"ahmed_mohamed@gmail.com", "amr_youssed@gmail.com","joe_yasser@gmail.com", "aly_osama@gmail.com", "hesham_ahmed@gmail.com", "abdelrahman_yasser@gmail.com"};
-static String [] phone_numbers = { "01036794460","01182173694", "01266433666", "01267049359", "01528060153", "01245151486" };
-static String [] passwords = {"Ahmed#2026!", "Amr_7890$", "JoePass@99", "Aly!Secret12", "Hesham#456*", "Abdo_2026#"};
-static int[] balance = {15960, 2600, 1500, 8850, 26900, 10000};
-static String [] account_status = {};
+static String [] ids = new String[100];
+static String [] usernames = new String[100];
+static String [] Emails = new String[100];
+static String [] phone_numbers = new String[100];
+static String [] passwords = new String[100];
+static int [] balance = new int[100];
+static String [] account_status = new String[100];
 
 
 
 
 
     public static void main(String[] args) {
-    
+      
+      String [] ids_store  = {"753489" , "992931", "758737", "333943", "841524", "395337"};
+      for(int i = 0; i < ids_store.length;i++)
+      {
+        ids[i] = ids_store[i];
+      }
+      String [] usernames_store = {"ahmed012", "amr_78", "joe818", "aly72", "hesham98","abdo88" };
+      for(int i = 0; i < ids_store.length;i++)
+      {
+        usernames[i] = usernames_store[i];
+      }
+      String [] Emails_store = {"ahmed_mohamed@gmail.com", "amr_youssed@gmail.com","joe_yasser@gmail.com", "aly_osama@gmail.com", "hesham_ahmed@gmail.com", "abdelrahman_yasser@gmail.com"};
+      for(int i = 0; i < ids_store.length;i++)
+      {
+        Emails[i] = Emails_store[i];
+      }
+      String [] phone_numbers_store = { "01036794460","01182173694", "01266433666", "01267049359", "01528060153", "01245151486" };
+      for(int i = 0; i < ids_store.length;i++)
+      {
+        phone_numbers[i] = phone_numbers_store[i];
+      }
+      String [] passwords_store = {"Ahmed#2026!", "Amr_7890$", "JoePass@99", "Aly!Secret12", "Hesham#456*", "Abdo_2026#"};
+      for(int i = 0; i < ids_store.length;i++)
+      {
+        passwords[i] = passwords_store[i];
+      }
+      int [] balance_store = {15960, 2600, 1500, 8850, 26900, 10000};
+      for(int i = 0; i < ids_store.length;i++)
+      {
+        balance[i] = balance_store[i];
+      }
+
+
+
+
+
       System.out.println("========== QUICK PAY ==========");
       System.out.println("1. Login as Admin");
       System.out.println("2. Login as User");
