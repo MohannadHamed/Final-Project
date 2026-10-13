@@ -38,23 +38,23 @@ static String [] account_status = {};
           System.out.print("Choose an option: ");
           int y = input.nextInt();
           switch (y) {
-            case 1:
+            case 1: //Show Statistics
               
-            case 2:
+            case 2: //Search User
 
-            case 3:
+            case 3: //View All Users
 
-            case 4:
+            case 4: //Update user
 
-            case 5:
+            case 5: //View All Transactions
 
-            case 6:
+            case 6: //Block account
 
-            case 7:
+            case 7: //Unblock account
 
-            case 8:
+            case 8: //View User Details
 
-            case 9:
+            case 9: //Logout
 
 
           
@@ -77,25 +77,25 @@ static String [] account_status = {};
           System.out.print("Choose an option: ");
           int z = input.nextInt();
           switch (z) {
-            case 1:
+            case 1: //Show Balance
               
-            case 2:
+            case 2: //Transfer Money
 
-            case 3:
+            case 3: //Transaction History
 
-            case 4:
+            case 4: //Show Favorites
 
-            case 5:
+            case 5: //Add Favorites
 
-            case 6:
+            case 6: //Remove Favorites
 
-            case 7:
+            case 7: //Search Recipient
 
-            case 8:
+            case 8: //View Profile
 
-            case 9:
+            case 9: //Update Profile
 
-            case 10:            
+            case 10: //Logout
           
             default:
               break;
@@ -112,6 +112,5 @@ static String [] account_status = {};
       
 
 
-      input.close();
     }
 }
