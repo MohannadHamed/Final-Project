@@ -9,10 +9,29 @@ public class FinalProject {
   static String[] Emails = new String[100];
   static String[] phone_numbers = new String[100];
   static String[] passwords = new String[100];
-  static double[] balance = new double[100];
+  static long[] balance = new long[100];
   static String[] account_status = new String[100];
 
   static String currentemail = "";
+
+  static boolean login_admin(String adminlog, String adminpass) {
+    System.out.print("Enter Admin Login: ");
+    adminlog = input.next();
+    if (adminlog.equalsIgnoreCase("Admin")) {
+      System.out.print("Enter Admin password: ");
+      adminpass = input.next();
+      if (adminpass.equals("Adminpass123")) {
+        System.out.println("Your logged in");
+        System.out.println();
+        return true;
+      } else {
+        System.out.println("Wrong Password");
+        return false;
+      }
+    }
+    System.out.println("Invalid Admin login");
+    return false;
+  }
 
   static boolean login(String email, String password) { // LOGIN FEATURE
     System.out.print("Enter your Email: ");
@@ -49,12 +68,76 @@ public class FinalProject {
   static void showBalance(String email) {
     for (int i = 0; i < Emails.length; i++) {
       if (Emails[i] != null && Emails[i].equalsIgnoreCase(email)) {
-        System.out.print("Your balance is: " + balance[i]);
+        System.out.print("Your balance is: " + (double) balance[i] / 100 + " EGP");
         System.out.println();
         break;
       }
     }
 
+  }
+
+  static void viewProfile() {
+    for (int i = 0; i < Emails.length; i++) {
+      if (Emails[i] != null && Emails[i].equalsIgnoreCase(currentemail)) {
+        System.out.println();
+        System.out.println("ID: " + ids[i]);
+        System.out.println("Username: " + usernames[i]);
+        System.out.println("Email: " + Emails[i]);
+        System.out.println("PhoneNumber: " + phone_numbers[i]);
+        System.out.println("password: " + passwords[i]);
+        System.out.println("Account status: " + account_status[i]);
+        System.out.println();
+        break;
+      }
+    }
+  }
+
+  static void updateProfile() {
+    for (int i = 0; i < Emails.length; i++) {
+      if (Emails[i] != null && Emails[i].equalsIgnoreCase(currentemail)) {
+        System.out.println("What do u want to edit");
+        System.out.println(" 1.Username\n 2.Email\n 3.PhoneNumber\n 4.password");
+        System.out.println();
+        System.out.print("Enter your choice: ");
+        int edit = input.nextInt();
+        switch (edit) {
+          case 1:
+            System.out.print("Enter your new Username: ");
+            String new_Username = input.next();
+            usernames[i] = new_Username;
+            System.out.println("Your new Username is " + usernames[i]);
+            System.out.println();
+            break;
+
+          case 2:
+            System.out.print("Enter your new Email: ");
+            String new_Email = input.next();
+            Emails[i] = new_Email;
+            System.out.println("Your new Email is " + Emails[i]);
+            currentemail = Emails[i];
+            System.out.println();
+            break;
+          case 3:
+            System.out.print("Enter your new PhoneNumber: ");
+            String new_phone_number = input.next();
+            phone_numbers[i] = new_phone_number;
+            System.out.println("Your new PhoneNumber is " + phone_numbers[i]);
+            System.out.println();
+            break;
+          case 4:
+            System.out.print("Enter your new Password: ");
+            String new_password = input.next();
+            passwords[i] = new_password;
+            System.out.println("Your new password is " + passwords[i]);
+            System.out.println();
+            break;
+          default:
+            System.out.println("Invalid choice");
+            break;
+        }
+        break;
+      }
+    }
   }
 
   public static void main(String[] args) {
@@ -82,11 +165,16 @@ public class FinalProject {
     for (int i = 0; i < passwords_store.length; i++) {
       passwords[i] = passwords_store[i];
     }
-    double[] balance_store = { 15960.6, 2600.15, 1500, 8850.5, 26900, 10000.2 };
-    for (int i = 0; i < ids_store.length; i++) {
+    long[] balance_store = { 1596060L, 260015L, 150000L, 885050L, 2690000L, 1000020L };
+    for (int i = 0; i < balance_store.length; i++) {
       balance[i] = balance_store[i];
     }
-    while (true) {
+    String[] account_status_store = { "UnBlocked", "Blocked", "Blocked", "UnBlocked", "UnBlocked", "Blocked" };
+    for (int i = 0; i < account_status_store.length; i++) {
+      account_status[i] = account_status_store[i];
+    }
+
+    while (true) { // Running the program till user uses exit
 
       System.out.println("========== QUICK PAY ==========");
       System.out.println("1. Login as Admin");
@@ -98,39 +186,49 @@ public class FinalProject {
       switch (x) {
         case 1:
           // admin panel
-          System.out.println("========== ADMIN PANEL ==========");
-          System.out.println("1. Show Statistics");
-          System.out.println("2. Search user");
-          System.out.println("3. View All Users");
-          System.out.println("4. Update User");
-          System.out.println("5. View All Transactions");
-          System.out.println("6. Block Account");
-          System.out.println("7. Unblock Account");
-          System.out.println("8. View User Details");
-          System.out.println("9. Logout");
-          System.out.print("Choose an option: ");
-          int y = input.nextInt();
-          switch (y) {
-            case 1: // Show Statistics
+          String adminlogin = "";
+          String adminpassword = "";
+          boolean adminloggedin = false;
 
-            case 2: // Search User
+          if (login_admin(adminlogin, adminpassword))
+            adminloggedin = true;
+          while (adminloggedin) {
+            System.out.println("========== ADMIN PANEL ==========");
+            System.out.println("1. Show Statistics");
+            System.out.println("2. Search user");
+            System.out.println("3. View All Users");
+            System.out.println("4. Update User");
+            System.out.println("5. View All Transactions");
+            System.out.println("6. Block Account");
+            System.out.println("7. Unblock Account");
+            System.out.println("8. View User Details");
+            System.out.println("9. Logout");
+            System.out.print("Choose an option: ");
+            int y = input.nextInt();
+            switch (y) {
+              case 1: // Show Statistics
 
-            case 3: // View All Users
+              case 2: // Search User
 
-            case 4: // Update user
+              case 3: // View All Users
 
-            case 5: // View All Transactions
+              case 4: // Update user
 
-            case 6: // Block account
+              case 5: // View All Transactions
 
-            case 7: // Unblock account
+              case 6: // Block account
 
-            case 8: // View User Details
+              case 7: // Unblock account
 
-            case 9: // Logout
+              case 8: // View User Details
 
-            default:
-              break;
+              case 9: // Logout
+                if (logout()) {
+                  currentemail = "";
+                  adminloggedin = false;
+                }
+                break;
+            }
           }
           break;
         case 2:
@@ -173,9 +271,11 @@ public class FinalProject {
               case 7: // Search Recipient
 
               case 8: // View Profile
-
+                viewProfile();
+                break;
               case 9: // Update Profile
-
+                updateProfile();
+                break;
               case 10: // Logout
                 if (logout()) {
                   currentemail = "";
