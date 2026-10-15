@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class FinalProject{
+public class FinalProject {
 
   // Arrays
   static Scanner input = new Scanner(System.in);
@@ -481,7 +481,7 @@ public class FinalProject{
         found = true;
       }
     }
-    if(!found)
+    if (!found)
       System.out.println("There is no transaction history for this account.");
   }
 
@@ -577,13 +577,14 @@ public class FinalProject{
             input.nextLine();
             switch (y) {
               case 1: // Show Statistics
-
+                showstatistics();
+                break;
               case 2:
                 SearchUser();
                 break;
 
               case 3:
-                viewAllUsers();
+                viewusers();
                 break;
 
               case 4:
@@ -591,7 +592,8 @@ public class FinalProject{
                 break;
 
               case 5:// Transaction History
-
+                transactionhistory();
+                break;
               case 6:
                 BlockAccount();
                 break;
@@ -686,11 +688,14 @@ public class FinalProject{
                 TransactionHistory(loggedInUser);
                 break;
               case 4: // Show Favorites
-
+                showfav();
+                break;
               case 5: // Add Favorites
-
+                addfav();
+                break;
               case 6: // Remove Favorites
-
+                removefav();
+                break;
               case 7: // Search Recipient
                 searchRecipient();
                 break;
@@ -723,4 +728,129 @@ public class FinalProject{
       }
     }
   }
+  // the following is made by Hla
+  // Admin panel
+
+  static void showstatistics() {
+    int totalusers = userCount;
+    String[] status = { "Active", "Active", "Blocked", "Active", "Blocked", "Active" };
+    int active = 0;
+    int blocked = 0;
+    for (int i = 0; i < status.length; i++) {
+      if (status[i].equals("Active")) {
+        active++;
+      } else if (status[i].equals("Blocked")) {
+        blocked++;
+      }
+    }
+    String[] transactionstatus = { "SUCCESS", "FAILED", "SUCCESS", "SUCCESS", "FAILED", "FAILED" };
+    double[] transactionamount = { 1000, 5600, 300, 1870, 2500, 200 };
+    int successful = 0;
+    int failed = 0;
+    double totaltransfers = 0;
+    for (int i = 0; i < transactionstatus.length; i++) {
+      if (transactionstatus[i].equals("SUCCESS")) {
+        successful++;
+        totaltransfers += transactionamount[i];
+      } else if (transactionstatus[i].equals("FAILED")) {
+        failed++;
+      }
+    }
+    System.out.println("=========ADMIN STATISTICS=========");
+    System.out.println("Total number of registered users : " + totalusers);
+    System.out.println("Active users : " + active);
+    System.out.println("Blocked users : " + blocked);
+    System.out.println("Successful Transactions : " + successful);
+    System.out.println("Failed Transactions : " + failed);
+    System.out.println("Total successful Transfers : " + totaltransfers);
+  }
+
+  static void viewusers() {
+    System.out.println("=========ALL USERS=========");
+    for (int i = 0; i < userCount; i++) {
+      System.out.println("Username :" + usernames[i]);
+      System.out.println("User ID :" + ids[i]);
+      System.out.println("Email address :" + Emails[i]);
+      System.out.println("Phone number :" + phone_numbers[i]);
+      System.out.println("Current Balance :" + balance[i]);
+      System.out.println("User Status: " + account_status[i]);
+    }
+  }
+
+  static String[] transactionids = { "TR-001", "TR-002", "TR-003", "TR-004", "TR-005", "TR-006" };
+  static String[] senders = { "ahmed012", "amr_78", "joe818", "aly72", "hesham98", "abdo88" };
+  static String[] receivers = { "amr_78", "joe818", "aly72", "hesham98", "abdo88", "ahmed012" };
+  static String[] transactionstatus = { "Successful", "Successful", "Failed", "Successful", "Successful",
+      "Successful" };
+
+  static void transactionhistory() {
+    if (totaltransactions == 0) {
+      System.out.println("No transactions found!");
+      return;
+    }
+    System.out.println("=========ALL TRANSACTIONS=========");
+    for (int i = 0; i < totaltransactions; i++) {
+      System.out.println("Transaction ID : " + transactionids[i]);
+      System.out.println("Transaction Sender : " + senders[i]);
+      System.out.println("Transaction Receiver : " + receivers[i]);
+      System.out.println("Transaction Status : " + transactionstatus[i]);
+    }
+
+    // user panel
+  }
+
+  static String[] favourits = new String[10];
+  static int countfav = 0;
+
+  static void addfav() {
+    System.out.println("=========ADD FAVOURITES=========");
+    if (countfav >= 10) {
+      System.out.println("Your Favourites list is completely filled !");
+      return;
+    }
+
+    System.out.println("Enter the username to add to your favourites list : ");
+    String name = input.nextLine();
+
+    for (int i = 0; i < countfav; i++) {
+      if (favourits[i].equals(name)) {
+        System.out.println("This username is already in your favourites list ! ");
+        return;
+      }
+    }
+    favourits[countfav] = name;
+    countfav++;
+    System.out.println(name + " Is Successfully added to your favourits list !");
+  }
+
+  static void removefav() {
+    System.out.println("=========REMOVE FAVOURITES=========");
+    if (countfav == 0) {
+      System.out.println("There is no Favourites to remove !");
+      return;
+    }
+    System.out.println("Enter the username to remove from your favourits list : ");
+    String name = input.nextLine();
+    boolean found = false;
+    int remove = -1;
+    for (int i = 0; i < countfav; i++) {
+      if (favourits[i].equalsIgnoreCase(name)) {
+        remove = i;
+        found = true;
+        break;
+      }
+    }
+  }
+
+  static void showfav() {
+    System.out.println("=========YOUR FAVOURITES=========");
+    if (countfav == 0) {
+      System.out.println("There is no favourites to show !");
+      return;
+    }
+    for (int i = 0; i < countfav; i++) {
+      System.out.println((i + 1) + favourits[i]);
+    }
+  }
+  //
 }
