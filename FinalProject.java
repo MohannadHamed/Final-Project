@@ -205,22 +205,35 @@ public class FinalProject {
             System.out.println("9. Logout");
             System.out.print("Choose an option: ");
             int y = input.nextInt();
+            input.nextLine();
             switch (y) {
               case 1: // Show Statistics
 
-              case 2: // Search User
+              case 2:
+                SearchUser();
+                break;
 
-              case 3: // View All Users
+              case 3:
+                updateUser();
+                break;
 
-              case 4: // Update user
+              case 4:
+                viewAllUsers();
+                break;
 
-              case 5: // View All Transactions
+              case 5:// Transaction History
 
-              case 6: // Block account
+              case 6:
+                BlockAccount();
+                break;
 
-              case 7: // Unblock account
+              case 7:
+                unblockAccount();
+                break;
 
-              case 8: // View User Details
+              case 8:
+                viewUserDetails();
+                break;
 
               case 9: // Logout
                 if (logout()) {
@@ -299,5 +312,183 @@ public class FinalProject {
       }
 
     }
+  }
+
+  // Malak
+  // Searches for a user and displays the result
+  static void SearchUser() {
+    int index = Find_User_From_Prompt();
+    if (index == -1) {
+      System.out.println("User Not Found");
+    } else {
+      printUser(index);
+
+    }
+  }
+
+  // Searches for a user by ID.
+  // We return the user's index, or -1 if the user is not found.
+  static int userCount = 6;
+
+  static int Find_User_By_id(String id) {
+    for (int i = 0; i < userCount; i++) {
+      if (ids[i].equals(id)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  // Searches for a user by username.
+  static int Find_User_By_Name(String name) {
+    for (int i = 0; i < userCount; i++) {
+      if (usernames[i].equalsIgnoreCase(name)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  // Searches for a user by email or phone number
+  static int Find_User_Email_OR_Phone(String value) {
+    for (int i = 0; i < userCount; i++) {
+      if (Emails[i].equalsIgnoreCase(value)
+          || phone_numbers[i].equals(value)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  // Prompts the admin to enter a User ID, username, email, or phone number
+  static int Find_User_From_Prompt() {
+    System.out.print("Enter user ID, username, email, or phone: ");
+    String User = input.nextLine();
+    int index = Find_User_By_id(User);
+
+    if (index == -1) {
+      index = Find_User_By_Name(User);
+    }
+
+    if (index == -1) {
+      index = Find_User_Email_OR_Phone(User);
+    }
+    return index;
+  }
+
+  // Displays all information
+  static void printUser(int index) {
+    System.out.println("User ID: " + ids[index]);
+    System.out.println("Username: " + usernames[index]);
+    System.out.println("Email: " + Emails[index]);
+    System.out.println("Phone: " + phone_numbers[index]);
+    System.out.println("Balance: " + balance[index]);
+    System.out.println("Account Status: " + account_status[index]);
+  }
+
+  static void updateUser() {
+    int index = Find_User_From_Prompt();
+
+    if (index == -1) {
+      System.out.println("User not found.");
+      return;
+    }
+
+    System.out.print("Enter new username (or press Enter to skip): ");
+    String New_Name = input.nextLine();
+
+    System.out.print("Enter new email (or press Enter to skip): ");
+    String New_Email = input.nextLine();
+
+    System.out.print("Enter new phone (or press Enter to skip): ");
+    String New_Phone = input.nextLine();
+
+    if (!New_Name.isEmpty()) {
+      usernames[index] = New_Name;
+    }
+
+    if (!New_Email.isEmpty()) {
+      int Check_Index = Find_User_Email_OR_Phone(New_Email);
+
+      if (Check_Index == -1 || Check_Index == index) {
+        Emails[index] = New_Email;
+      } else {
+        System.out.println("Email already used; unchanged.");
+      }
+    }
+
+    if (!New_Phone.isEmpty()) {
+      int Check_Index = Find_User_Email_OR_Phone(New_Phone);
+
+      if (Check_Index == -1 || Check_Index == index) {
+        phone_numbers[index] = New_Phone;
+      } else {
+        System.out.println("Phone already used; unchanged.");
+      }
+    }
+
+    System.out.println("User update finished.");
+    printUser(index);
+  }
+
+  // Displays all registered users
+  static void viewAllUsers() {
+    if (userCount == 0) {
+      System.out.println("No users found.");
+      return;
+    }
+
+    for (int i = 0; i < userCount; i++) {
+      System.out.println("========================================================");
+      printUser(i);
+    }
+  }
+
+  // Reactivates a blocked account
+  static void BlockAccount() {
+    int index = Find_User_From_Prompt();
+
+    if (index == -1) {
+      System.out.println("User not found.");
+      return;
+    }
+
+    if (account_status[index].equals("Blocked")) {
+      System.out.println("Account is already blocked.");
+      return;
+    }
+
+    account_status[index] = "Blocked";
+    System.out.println("Account blocked successfully.");
+  }
+
+  static void unblockAccount() {
+    int index = Find_User_From_Prompt();
+
+    if (index == -1) {
+      System.out.println("User not found.");
+      return;
+    }
+
+    if (account_status[index].equals("ACTIVE")) {
+      System.out.println("Account is already active.");
+      return;
+    }
+
+    account_status[index] = "ACTIVE";
+    System.out.println("Account unblocked successfully.");
+  }
+
+  // Displays the details of a selected user
+  static void viewUserDetails() {
+    int index = Find_User_From_Prompt();
+
+    if (index == -1) {
+      System.out.println("User not found.");
+      return;
+    }
+
+    System.out.println("=== USER DETAILS ===");
+    printUser(index);
   }
 }
