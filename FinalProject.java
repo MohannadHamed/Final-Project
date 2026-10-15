@@ -38,6 +38,14 @@ public class FinalProject {
     email = input.next();
     for (int i = 0; i < Emails.length; i++) {
       if (Emails[i] != null && Emails[i].equalsIgnoreCase(email)) {
+
+
+        if(account_status[i] != null && account_status[i].equalsIgnoreCase("Blocked"))
+        {
+          System.out.println("This account is blocked");
+          System.out.println();
+          return false;
+        }
         System.out.print("Enter your password: ");
         password = input.next();
         if (passwords[i].equals(password)) {
@@ -140,6 +148,54 @@ public class FinalProject {
     }
   }
 
+  public static boolean SignUp(String newEmail, String newPassword, String newPhonenumber, String newUserName) {
+    boolean empty = false;
+    int index = 0;
+    for (int i = 0; i < Emails.length; i++) {
+      if (Emails[i] == null) {
+        empty = true;
+        index = i;
+        break;
+      }
+    }
+    if (empty) {
+      System.out.print("Enter your new Email: ");
+      newEmail = input.next();
+
+      for (int i = 0; i < Emails.length; i++) {
+        if (Emails[i] != null && Emails[i].equalsIgnoreCase(newEmail)) {
+          System.out.println("Email already registered!");
+          System.out.println();
+          return false;
+        }
+      }
+
+      System.out.print("Enter your new UserName: ");
+      newUserName = input.next();
+      usernames[index] = newUserName;
+      Emails[index] = newEmail;
+      System.out.print("Enter your new PhoneNumber: ");
+      newPhonenumber = input.next();
+      phone_numbers[index] = newPhonenumber;
+      System.out.print("Enter your new Password: ");
+      newPassword = input.next();
+      passwords[index] = newPassword;
+
+      ids[index] = String.valueOf((int) (Math.random() * 900000) + 100000); // the range formula (maxNumber - minNumber
+                                                                            // + 1)
+      balance[index] = 0L;
+      account_status[index] = "Unblocked";
+      currentemail = newEmail;
+      System.out.println("Account created succesfully! Your ID is " + ids[index]);
+      System.out.println();
+      return true;
+    } else {
+      System.out.println("System Full. Cannot register in the mean time");
+      System.out.println();
+      return false;
+    }
+  }
+
   public static void main(String[] args) {
     // Filling Arrays
     String[] ids_store = { "753489", "992931", "758737", "333943", "841524", "395337" };
@@ -150,7 +206,7 @@ public class FinalProject {
     for (int i = 0; i < usernames_store.length; i++) {
       usernames[i] = usernames_store[i];
     }
-    String[] Emails_store = { "ahmed_mohamed@gmail.com", "amr_youssed@gmail.com", "joe_yasser@gmail.com",
+    String[] Emails_store = { "ahmed_mohamed@gmail.com", "amr_youssef@gmail.com", "joe_yasser@gmail.com",
         "aly_osama@gmail.com", "hesham_ahmed@gmail.com", "abdelrahman_yasser@gmail.com" };
     for (int i = 0; i < Emails_store.length; i++) {
       Emails[i] = Emails_store[i];
@@ -233,11 +289,36 @@ public class FinalProject {
           break;
         case 2:
           // user panel
-          String email = "";
-          String password = "";
+          System.out.println("1.Login\n2.SignUp");
+          System.out.println();
+          System.out.print("Enter your choice: ");
+          int signlog = input.nextInt();
           boolean stayloggedin = false;
-          if (login(email, password))
-            stayloggedin = true;
+
+
+          switch (signlog) {
+            case 1:
+              String email = "";
+              String password = "";
+              
+              if (login(email, password))
+                stayloggedin = true;
+              break;
+            case 2:
+            String newEmail = "";
+            String newPassword = "";
+            String newPhonenumber = "";
+            String newUserName = "";
+            if(SignUp(newEmail, newPassword, newPhonenumber, newUserName))
+              stayloggedin = true;
+            break;
+
+            default:
+              System.out.println("Invalid choice");
+              break;
+          }
+
+
           while (stayloggedin) {
             System.out.println("========== USER PANEL ==========");
             System.out.println("1. Show Balance");
