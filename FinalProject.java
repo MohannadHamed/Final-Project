@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class FinalProject {
+public class FinalProject{
 
   // Arrays
   static Scanner input = new Scanner(System.in);
@@ -12,6 +12,12 @@ public class FinalProject {
   static long[] balance = new long[100];
   static String[] account_status = new String[100];
 
+  static long[] amounts = new long[100];
+  static String[] transaction_senders = new String[100];
+  static String[] transaction_receivers = new String[100];
+  static String[] transaction_status = new String[100];
+
+  static int totaltransactions = 0;
   static String currentemail = "";
 
   static boolean login_admin(String adminlog, String adminpass) {
@@ -39,9 +45,7 @@ public class FinalProject {
     for (int i = 0; i < Emails.length; i++) {
       if (Emails[i] != null && Emails[i].equalsIgnoreCase(email)) {
 
-
-        if(account_status[i] != null && account_status[i].equalsIgnoreCase("Blocked"))
-        {
+        if (account_status[i] != null && account_status[i].equalsIgnoreCase("Blocked")) {
           System.out.println("This account is blocked");
           System.out.println();
           return false;
@@ -120,17 +124,28 @@ public class FinalProject {
           case 2:
             System.out.print("Enter your new Email: ");
             String new_Email = input.next();
-            Emails[i] = new_Email;
-            System.out.println("Your new Email is " + Emails[i]);
-            currentemail = Emails[i];
-            System.out.println();
+            int emailcheck = Find_User_Email_OR_Phone(new_Email);
+            if (emailcheck == -1 || emailcheck == i) {
+              Emails[i] = new_Email;
+              System.out.println("Your new Email is " + Emails[i]);
+              currentemail = Emails[i];
+              System.out.println();
+              break;
+            } else
+              System.out.println("This Email is already registered");
             break;
+
           case 3:
             System.out.print("Enter your new PhoneNumber: ");
             String new_phone_number = input.next();
-            phone_numbers[i] = new_phone_number;
-            System.out.println("Your new PhoneNumber is " + phone_numbers[i]);
-            System.out.println();
+            int phonenumbercheck = Find_User_Email_OR_Phone(new_phone_number);
+            if (phonenumbercheck == -1 || phonenumbercheck == i) {
+              phone_numbers[i] = new_phone_number;
+              System.out.println("Your new PhoneNumber is " + phone_numbers[i]);
+              System.out.println();
+              break;
+            } else
+              System.out.println("This PhoneNumber is already registered");
             break;
           case 4:
             System.out.print("Enter your new Password: ");
@@ -181,13 +196,14 @@ public class FinalProject {
       newPassword = input.next();
       passwords[index] = newPassword;
 
-      ids[index] = String.valueOf((int) (Math.random() * 900000) + 100000); // the range formula (maxNumber - minNumber + 1)
+      ids[index] = String.valueOf((int) (Math.random() * 900000) + 100000); // the range formula (maxNumber - minNumber
+                                                                            // + 1)
       balance[index] = 0L;
-      account_status[index] = "Unblocked";
+      account_status[index] = "Active";
       currentemail = newEmail;
       System.out.println("Account created succesfully! Your ID is " + ids[index]);
       System.out.println();
-      if(index >= userCount)
+      if (index >= userCount)
         userCount = index + 1;
       return true;
     } else {
@@ -196,6 +212,7 @@ public class FinalProject {
       return false;
     }
   }
+
   // Malak
   // Searches for a user and displays the result
   static void SearchUser() {
@@ -376,6 +393,122 @@ public class FinalProject {
     System.out.println("=== USER DETAILS ===");
     printUser(index);
   }
+
+  // method to transfer money from user to another user using phone number
+  static void transferMoney(int senderIndex) {
+    if (totaltransactions >= 100) {
+      System.out.println("System transactions log is full. Cannot process transfer.");
+      System.out.println();
+      return;
+    }
+    System.out.println("--- Transfer Money ---");
+    System.out.print("Enter receiver's phone number: ");
+    String receiverInput = input.next();
+    int receiverIndex = -1;
+
+    for (int i = 0; i < phone_numbers.length; i++) {
+      if (phone_numbers[i] != null && phone_numbers[i].equals(receiverInput)) {
+        receiverIndex = i;
+        break;
+      }
+    }
+    if (receiverIndex == -1) {
+      System.out.println("receiver not found ");
+      System.out.println();
+      return;
+    }
+    if (receiverIndex == senderIndex) {
+      System.out.println("You can't transfer money to yourself.");
+      System.out.println();
+      return;
+    }
+    if (account_status[receiverIndex] != null && account_status[receiverIndex].equalsIgnoreCase("Blocked")) {
+      System.out.println("Transaction declined: Reciever account is blocked.");
+      System.out.println();
+      return;
+    }
+    System.out.print("Enter amount: ");
+    double amount = input.nextDouble();
+    input.nextLine();
+
+    if (amount <= 0) {
+      System.out.println("Amount must be greater than zero ");
+      System.out.println();
+      return;
+    }
+    long amountaslong = (long) (amount * 100);
+    if (balance[senderIndex] < amountaslong) {
+      System.out.println("declined transaction: Insufficient balance");
+      System.out.println();
+      transaction_senders[totaltransactions] = usernames[senderIndex];
+      transaction_receivers[totaltransactions] = usernames[receiverIndex];
+      amounts[totaltransactions] = amountaslong;
+      transaction_status[totaltransactions] = "Declined";
+      totaltransactions++;
+      return;
+    } else {
+      balance[senderIndex] -= amountaslong;
+      balance[receiverIndex] += amountaslong;
+      System.out.println(" approved transaction " + amount + " is transfered successufully ");
+      System.out.println();
+      transaction_senders[totaltransactions] = usernames[senderIndex];
+      transaction_receivers[totaltransactions] = usernames[receiverIndex];
+      amounts[totaltransactions] = amountaslong;
+      transaction_status[totaltransactions] = "Approved";
+      totaltransactions++;
+    }
+  }
+
+  // method to display transaction history
+  static void TransactionHistory(String currentUsername) {
+    System.out.println("--- Transaction History ---");
+
+    if (totaltransactions == 0) {
+      System.out.println("There is no transactions found ");
+      System.out.println();
+      return;
+    }
+    boolean found = false;
+    for (int i = 0; i < totaltransactions; i++) {
+      if ((transaction_senders[i] != null && transaction_senders[i].equalsIgnoreCase(currentUsername))
+          || (transaction_receivers[i] != null && transaction_receivers[i].equalsIgnoreCase(currentUsername))) {
+        System.out.println("Transaction " + (i + 1) + ":");
+        System.out.println("Sender username: " + transaction_senders[i]);
+        System.out.println("Receiver username: " + transaction_receivers[i]);
+        System.out.println("Amount: " + (double) amounts[i] / 100 + " EGP");
+        System.out.println("Status: " + transaction_status[i]);
+        System.out.println();
+        found = true;
+      }
+    }
+    if(!found)
+      System.out.println("There is no transaction history for this account.");
+  }
+
+  // method to search for a recipient by phone number
+  static void searchRecipient() {
+    System.out.println("--- Search Recipient ---");
+    System.out.print("Enter recipient's phone number: ");
+
+    String phonenumber = input.next();
+    int searchindex = -1;
+
+    for (int i = 0; i < phone_numbers.length; i++) {
+      if (phone_numbers[i] != null && phone_numbers[i].equals(phonenumber)) {
+        searchindex = i;
+        break;
+      }
+    }
+    if (searchindex >= 0) {
+      System.out.println("Recipient Found");
+      System.out.println("Username: " + usernames[searchindex]);
+      System.out.println("Phone: " + phone_numbers[searchindex]);
+      System.out.println();
+    } else {
+      System.out.println("No user found with this PhoneNumber.");
+    }
+  }
+
   public static void main(String[] args) {
     // Filling Arrays
     String[] ids_store = { "753489", "992931", "758737", "333943", "841524", "395337" };
@@ -389,7 +522,7 @@ public class FinalProject {
     String[] Emails_store = { "ahmed_mohamed@gmail.com", "amr_youssef@gmail.com", "joe_yasser@gmail.com",
         "aly_osama@gmail.com", "hesham_ahmed@gmail.com", "abdelrahman_yasser@gmail.com" };
     for (int i = 0; i < Emails_store.length; i++) {
-      Emails[i] = Emails_store[i]; 
+      Emails[i] = Emails_store[i];
     }
     String[] phone_numbers_store = { "01036794460", "01182173694", "01266433666", "01267049359", "01528060153",
         "01245151486" };
@@ -488,29 +621,27 @@ public class FinalProject {
           int signlog = input.nextInt();
           boolean stayloggedin = false;
 
-
           switch (signlog) {
             case 1:
               String email = "";
               String password = "";
-              
+
               if (login(email, password))
                 stayloggedin = true;
               break;
             case 2:
-            String newEmail = "";
-            String newPassword = "";
-            String newPhonenumber = "";
-            String newUserName = "";
-            if(SignUp(newEmail, newPassword, newPhonenumber, newUserName))
-              stayloggedin = true;
-            break;
+              String newEmail = "";
+              String newPassword = "";
+              String newPhonenumber = "";
+              String newUserName = "";
+              if (SignUp(newEmail, newPassword, newPhonenumber, newUserName))
+                stayloggedin = true;
+              break;
 
             default:
               System.out.println("Invalid choice");
               break;
           }
-
 
           while (stayloggedin) {
             System.out.println("========== USER PANEL ==========");
@@ -533,9 +664,27 @@ public class FinalProject {
                 System.out.println();
                 break;
               case 2: // Transfer Money
-
+                int senderindex = -1;
+                for (int i = 0; i < Emails.length; i++) {
+                  if (Emails[i] != null && Emails[i].equalsIgnoreCase(currentemail)) {
+                    senderindex = i;
+                    break;
+                  }
+                }
+                if (senderindex != -1) {
+                  transferMoney(senderindex);
+                }
+                break;
               case 3: // Transaction History
-
+                String loggedInUser = "";
+                for (int i = 0; i < Emails.length; i++) {
+                  if (Emails[i] != null && Emails[i].equalsIgnoreCase(currentemail)) {
+                    loggedInUser = usernames[i];
+                    break;
+                  }
+                }
+                TransactionHistory(loggedInUser);
+                break;
               case 4: // Show Favorites
 
               case 5: // Add Favorites
@@ -543,7 +692,8 @@ public class FinalProject {
               case 6: // Remove Favorites
 
               case 7: // Search Recipient
-
+                searchRecipient();
+                break;
               case 8: // View Profile
                 viewProfile();
                 break;
