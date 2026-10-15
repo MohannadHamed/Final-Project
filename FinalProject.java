@@ -17,6 +17,9 @@ public class FinalProject {
   static String[] transaction_receivers = new String[100];
   static String[] transaction_status = new String[100];
 
+   static String[][] favourits = new String[100][10];
+   static int[] countfav = new int[100];
+
   static int totaltransactions = 0;
   static String currentemail = "";
 
@@ -262,8 +265,8 @@ public class FinalProject {
   // Prompts the admin to enter a User ID, username, email, or phone number
   static int Find_User_From_Prompt() {
     System.out.print("Enter user ID, username, email, or phone: ");
+    String User = input.next();
     System.out.println();
-    String User = input.nextLine();
     int index = Find_User_By_id(User);
 
     if (index == -1) {
@@ -296,13 +299,13 @@ public class FinalProject {
     }
 
     System.out.print("Enter new username (or press Enter to skip): ");
-    String New_Name = input.nextLine();
+    String New_Name = input.next();
 
     System.out.print("Enter new email (or press Enter to skip): ");
-    String New_Email = input.nextLine();
+    String New_Email = input.next();
 
     System.out.print("Enter new phone (or press Enter to skip): ");
-    String New_Phone = input.nextLine();
+    String New_Phone = input.next();
 
     if (!New_Name.isEmpty()) {
       usernames[index] = New_Name;
@@ -733,26 +736,24 @@ public class FinalProject {
 
   static void showstatistics() {
     int totalusers = userCount;
-    String[] status = { "Active", "Active", "Blocked", "Active", "Blocked", "Active" };
+
     int active = 0;
     int blocked = 0;
-    for (int i = 0; i < status.length; i++) {
-      if (status[i].equals("Active")) {
+    for (int i = 0; i < account_status.length; i++) {
+      if (account_status[i] != null && account_status[i].equalsIgnoreCase("Active")) {
         active++;
-      } else if (status[i].equals("Blocked")) {
+      } else if (account_status[i] != null && account_status[i].equalsIgnoreCase("Blocked")) {
         blocked++;
       }
     }
-    String[] transactionstatus = { "SUCCESS", "FAILED", "SUCCESS", "SUCCESS", "FAILED", "FAILED" };
-    double[] transactionamount = { 1000, 5600, 300, 1870, 2500, 200 };
     int successful = 0;
     int failed = 0;
     double totaltransfers = 0;
-    for (int i = 0; i < transactionstatus.length; i++) {
-      if (transactionstatus[i].equals("SUCCESS")) {
+    for (int i = 0; i < transaction_status.length; i++) {
+      if (transaction_status[i] != null && transaction_status[i].equalsIgnoreCase("Approved")) {
         successful++;
-        totaltransfers += transactionamount[i];
-      } else if (transactionstatus[i].equals("FAILED")) {
+        totaltransactions += amounts[i];
+      } else if (transaction_status[i] != null && transaction_status[i].equalsIgnoreCase("Declined")) {
         failed++;
       }
     }
@@ -762,7 +763,8 @@ public class FinalProject {
     System.out.println("Blocked users : " + blocked);
     System.out.println("Successful Transactions : " + successful);
     System.out.println("Failed Transactions : " + failed);
-    System.out.println("Total successful Transfers : " + totaltransfers);
+    System.out.println("Total successful Transfers : " + totaltransactions);
+    System.out.println();
   }
 
   static void viewusers() {
@@ -772,85 +774,137 @@ public class FinalProject {
       System.out.println("User ID :" + ids[i]);
       System.out.println("Email address :" + Emails[i]);
       System.out.println("Phone number :" + phone_numbers[i]);
-      System.out.println("Current Balance :" + balance[i]);
+      System.out.println("Current Balance :" + (double) balance[i] / 100);
       System.out.println("User Status: " + account_status[i]);
+      System.out.println("=============================");
     }
   }
 
-  static String[] transactionids = { "TR-001", "TR-002", "TR-003", "TR-004", "TR-005", "TR-006" };
-  static String[] senders = { "ahmed012", "amr_78", "joe818", "aly72", "hesham98", "abdo88" };
-  static String[] receivers = { "amr_78", "joe818", "aly72", "hesham98", "abdo88", "ahmed012" };
-  static String[] transactionstatus = { "Successful", "Successful", "Failed", "Successful", "Successful",
-      "Successful" };
 
   static void transactionhistory() {
     if (totaltransactions == 0) {
       System.out.println("No transactions found!");
+      System.out.println();
       return;
     }
     System.out.println("=========ALL TRANSACTIONS=========");
     for (int i = 0; i < totaltransactions; i++) {
-      System.out.println("Transaction ID : " + transactionids[i]);
-      System.out.println("Transaction Sender : " + senders[i]);
-      System.out.println("Transaction Receiver : " + receivers[i]);
-      System.out.println("Transaction Status : " + transactionstatus[i]);
+      System.out.println("Transaction " + (i + 1) + ":");
+      System.out.println("Transaction Sender : " + transaction_senders[i]);
+      System.out.println("Transaction Receiver : " + transaction_receivers[i]);
+      System.out.println("Amount: " + (double) amounts[i] / 100 + " EGP");
+      System.out.println("Transaction Status : " + transaction_status[i]);
+      System.out.println("=============================");
+      System.out.println();
     }
 
     // user panel
   }
 
-  static String[] favourits = new String[10];
-  static int countfav = 0;
+ 
 
   static void addfav() {
     System.out.println("=========ADD FAVOURITES=========");
-    if (countfav >= 10) {
+    int findex = -1;
+    for(int i = 0;i < Emails.length;i++)
+    {
+      if(Emails[i] != null && Emails[i].equalsIgnoreCase(currentemail))
+      {
+        findex = i;
+        break;
+      }
+    }
+    if(findex == -1) return;
+
+    if (countfav[findex] >= 10) {
       System.out.println("Your Favourites list is completely filled !");
+      System.out.println();
       return;
     }
 
-    System.out.println("Enter the username to add to your favourites list : ");
-    String name = input.nextLine();
+    System.out.print("Enter the username to add to your favourites list: ");
+    String name = input.next();
 
-    for (int i = 0; i < countfav; i++) {
-      if (favourits[i].equals(name)) {
+    for (int i = 0; i < countfav[findex]; i++) {
+      if (favourits[findex][i] != null && favourits[findex][i].equalsIgnoreCase(name)) {
         System.out.println("This username is already in your favourites list ! ");
+        System.out.println();
         return;
       }
     }
-    favourits[countfav] = name;
-    countfav++;
+    favourits[findex][countfav[findex]] = name;
+    countfav[findex]++;
     System.out.println(name + " Is Successfully added to your favourits list !");
+    System.out.println();
   }
 
   static void removefav() {
     System.out.println("=========REMOVE FAVOURITES=========");
-    if (countfav == 0) {
+    int findex = -1;
+    for(int i = 0; i < Emails.length;i++)
+    {
+      if(Emails[i] != null && Emails[i].equalsIgnoreCase(currentemail))
+      {
+        findex = i;
+        break;
+      }
+    }
+
+    if(findex == -1) return ;
+
+    if (countfav[findex] == 0) {
       System.out.println("There is no Favourites to remove !");
       return;
     }
-    System.out.println("Enter the username to remove from your favourits list : ");
-    String name = input.nextLine();
-    boolean found = false;
+    System.out.print("Enter the username to remove from your favourits list: ");
+    String name = input.next();
     int remove = -1;
-    for (int i = 0; i < countfav; i++) {
-      if (favourits[i].equalsIgnoreCase(name)) {
+
+    for (int i = 0; i < countfav[findex]; i++) {
+      if (favourits[findex][i] != null && favourits[findex][i].equalsIgnoreCase(name)) {
         remove = i;
-        found = true;
         break;
       }
+    }
+    if(remove != -1)
+    {
+      for(int i = remove; i < countfav[findex] - 1; i++)
+      {
+        favourits[findex][i] = favourits[findex][i + 1];
+      }
+      countfav[findex]--;
+      
+      System.out.println(name + " has been removed from your favorites!");
+      System.out.println();
+    }
+    else
+    {
+      System.out.println("Username is not found in your favorites.");
+      System.out.println();
     }
   }
 
   static void showfav() {
     System.out.println("=========YOUR FAVOURITES=========");
-    if (countfav == 0) {
+    int findex = -1;
+    for(int i = 0; i < Emails.length;i++)
+    {
+      if(Emails[i] != null && Emails[i].equalsIgnoreCase(currentemail))
+      {
+        findex = i;
+        break;
+      }
+    }
+    if(findex == -1) return;
+    if (countfav[findex] == 0) {
       System.out.println("There is no favourites to show !");
+      System.out.println();
       return;
     }
-    for (int i = 0; i < countfav; i++) {
-      System.out.println((i + 1) + favourits[i]);
+    for (int i = 0; i < countfav[findex]; i++) {
+      System.out.println((i + 1) +". "+ favourits[findex][i]);
     }
+    System.out.println();
   }
   //
 }
