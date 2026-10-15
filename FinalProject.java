@@ -297,15 +297,14 @@ public class FinalProject {
       System.out.println("User not found.");
       return;
     }
-
     System.out.print("Enter new username (or press Enter to skip): ");
-    String New_Name = input.next();
+    String New_Name = input.nextLine();
 
     System.out.print("Enter new email (or press Enter to skip): ");
-    String New_Email = input.next();
+    String New_Email = input.nextLine();
 
     System.out.print("Enter new phone (or press Enter to skip): ");
-    String New_Phone = input.next();
+    String New_Phone = input.nextLine();
 
     if (!New_Name.isEmpty()) {
       usernames[index] = New_Name;
