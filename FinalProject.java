@@ -209,7 +209,7 @@ public class FinalProject {
     String[] Emails_store = { "ahmed_mohamed@gmail.com", "amr_youssef@gmail.com", "joe_yasser@gmail.com",
         "aly_osama@gmail.com", "hesham_ahmed@gmail.com", "abdelrahman_yasser@gmail.com" };
     for (int i = 0; i < Emails_store.length; i++) {
-      Emails[i] = Emails_store[i];
+      Emails[i] = Emails_store[i]; 
     }
     String[] phone_numbers_store = { "01036794460", "01182173694", "01266433666", "01267049359", "01528060153",
         "01245151486" };
