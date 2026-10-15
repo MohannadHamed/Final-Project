@@ -17,8 +17,8 @@ public class FinalProject {
   static String[] transaction_receivers = new String[100];
   static String[] transaction_status = new String[100];
 
-   static String[][] favourits = new String[100][10];
-   static int[] countfav = new int[100];
+  static String[][] favourits = new String[100][10];
+  static int[] countfav = new int[100];
 
   static int totaltransactions = 0;
   static String currentemail = "";
@@ -115,6 +115,7 @@ public class FinalProject {
         System.out.println();
         System.out.print("Enter your choice: ");
         int edit = input.nextInt();
+        input.nextLine();
         switch (edit) {
           case 1:
             System.out.print("Enter your new Username: ");
@@ -266,6 +267,7 @@ public class FinalProject {
   static int Find_User_From_Prompt() {
     System.out.print("Enter user ID, username, email, or phone: ");
     String User = input.next();
+    input.nextLine();
     System.out.println();
     int index = Find_User_By_id(User);
 
@@ -297,10 +299,10 @@ public class FinalProject {
       System.out.println("User not found.");
       return;
     }
-    System.out.print("Enter new username (or press Enter to skip): ");
+    System.out.println("Enter new username (or press Enter to skip): ");
     String New_Name = input.nextLine();
 
-    System.out.print("Enter new email (or press Enter to skip): ");
+    System.out.println("Enter new email (or press Enter to skip): ");
     String New_Email = input.nextLine();
 
     System.out.print("Enter new phone (or press Enter to skip): ");
@@ -553,6 +555,7 @@ public class FinalProject {
       System.out.println("3. Exit");
       System.out.print("Choose an option: ");
       int x = input.nextInt();
+      input.nextLine();
       System.out.println();
       switch (x) {
         case 1:
@@ -661,6 +664,8 @@ public class FinalProject {
             System.out.println("10. Logout");
             System.out.print("Choose an option: ");
             int z = input.nextInt();
+            input.nextLine();
+
             switch (z) {
               case 1: // Show Balance
                 System.out.println();
@@ -779,7 +784,6 @@ public class FinalProject {
     }
   }
 
-
   static void transactionhistory() {
     if (totaltransactions == 0) {
       System.out.println("No transactions found!");
@@ -800,20 +804,17 @@ public class FinalProject {
     // user panel
   }
 
- 
-
   static void addfav() {
     System.out.println("=========ADD FAVOURITES=========");
     int findex = -1;
-    for(int i = 0;i < Emails.length;i++)
-    {
-      if(Emails[i] != null && Emails[i].equalsIgnoreCase(currentemail))
-      {
+    for (int i = 0; i < Emails.length; i++) {
+      if (Emails[i] != null && Emails[i].equalsIgnoreCase(currentemail)) {
         findex = i;
         break;
       }
     }
-    if(findex == -1) return;
+    if (findex == -1)
+      return;
 
     if (countfav[findex] >= 10) {
       System.out.println("Your Favourites list is completely filled !");
@@ -840,16 +841,15 @@ public class FinalProject {
   static void removefav() {
     System.out.println("=========REMOVE FAVOURITES=========");
     int findex = -1;
-    for(int i = 0; i < Emails.length;i++)
-    {
-      if(Emails[i] != null && Emails[i].equalsIgnoreCase(currentemail))
-      {
+    for (int i = 0; i < Emails.length; i++) {
+      if (Emails[i] != null && Emails[i].equalsIgnoreCase(currentemail)) {
         findex = i;
         break;
       }
     }
 
-    if(findex == -1) return ;
+    if (findex == -1)
+      return;
 
     if (countfav[findex] == 0) {
       System.out.println("There is no Favourites to remove !");
@@ -865,19 +865,15 @@ public class FinalProject {
         break;
       }
     }
-    if(remove != -1)
-    {
-      for(int i = remove; i < countfav[findex] - 1; i++)
-      {
+    if (remove != -1) {
+      for (int i = remove; i < countfav[findex] - 1; i++) {
         favourits[findex][i] = favourits[findex][i + 1];
       }
       countfav[findex]--;
-      
+
       System.out.println(name + " has been removed from your favorites!");
       System.out.println();
-    }
-    else
-    {
+    } else {
       System.out.println("Username is not found in your favorites.");
       System.out.println();
     }
@@ -886,22 +882,21 @@ public class FinalProject {
   static void showfav() {
     System.out.println("=========YOUR FAVOURITES=========");
     int findex = -1;
-    for(int i = 0; i < Emails.length;i++)
-    {
-      if(Emails[i] != null && Emails[i].equalsIgnoreCase(currentemail))
-      {
+    for (int i = 0; i < Emails.length; i++) {
+      if (Emails[i] != null && Emails[i].equalsIgnoreCase(currentemail)) {
         findex = i;
         break;
       }
     }
-    if(findex == -1) return;
+    if (findex == -1)
+      return;
     if (countfav[findex] == 0) {
       System.out.println("There is no favourites to show !");
       System.out.println();
       return;
     }
     for (int i = 0; i < countfav[findex]; i++) {
-      System.out.println((i + 1) +". "+ favourits[findex][i]);
+      System.out.println((i + 1) + ". " + favourits[findex][i]);
     }
     System.out.println();
   }
